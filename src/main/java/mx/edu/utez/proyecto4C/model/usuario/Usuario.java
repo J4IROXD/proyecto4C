@@ -1,0 +1,45 @@
+package mx.edu.utez.proyecto4C.model.usuario;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import mx.edu.utez.proyecto4C.model.persona.Persona;
+
+@Entity
+@Table (name = "usuario")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class Usuario {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(
+            name = "username1",
+            nullable = false,
+            unique = true
+    )
+    private String username;
+    private String password;
+
+    private boolean isEnable;
+
+    @Enumerated(EnumType.STRING)
+    private Roles rol;
+
+    @Column(
+            columnDefinition = "TEXT"
+    )
+    private String descripcion;
+
+    @OneToOne
+    @JoinColumn(name = "pesona_id")
+    private Persona persona;
+
+
+}
