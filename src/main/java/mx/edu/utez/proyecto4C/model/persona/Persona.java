@@ -30,13 +30,14 @@ public class Persona {
     private String correo;
     private String curp;
 
+/*
+     @ManyToMany
+     @JoinTable(
+         name = "personas_cursos",
+       joinColumns = @JoinColumn(name = "persona_id"),
+    inverseJoinColumns = @JoinColumn(name = "cursos_id")
+    )
 
-    // @ManyToMany
-    // @JoinTable(
-       //     name = "personas_cursos",
-         //   joinColumns = @JoinColumn(name = "persona_id"),
-           // inverseJoinColumns = @JoinColumn(name = "cursos_id")
-    // )
-
-    //private List<Curso> cursos;
+    private List<Curso> cursos;
+ */
 }
