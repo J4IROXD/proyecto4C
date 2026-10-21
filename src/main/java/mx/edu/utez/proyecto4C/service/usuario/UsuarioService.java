@@ -1,7 +1,9 @@
 package mx.edu.utez.proyecto4C.service.usuario;
 
+import mx.edu.utez.proyecto4C.controller.usuario.dto.RequestActualizarUsuarioDTO;
 import mx.edu.utez.proyecto4C.controller.usuario.dto.RequestCrearUsuarioDTO;
 import mx.edu.utez.proyecto4C.exception.customExceptions.BadRequestException;
+import mx.edu.utez.proyecto4C.exception.customExceptions.NotFoundException;
 import mx.edu.utez.proyecto4C.model.persona.Persona;
 import mx.edu.utez.proyecto4C.model.usuario.Roles;
 import mx.edu.utez.proyecto4C.model.usuario.Usuario;
@@ -61,5 +63,43 @@ public class UsuarioService {
         newUser.setPersona(newPersona);
 
         return usuarioRepository.save(newUser);
+    }
+
+    public Usuario getUserById(Long id){
+        return findUserOrThrow(id);
+    }
+
+    // Activar (true) o desactivar (false) un usuario por id
+    @Transactional
+    public Usuario changeEnable(Long id, boolean enable){
+        Usuario usuario = findUserOrThrow(id);
+        usuario.setEnable(enable);
+        return usuarioRepository.save(usuario);
+    }
+
+    // Actualizar SOLO username y descripcion.
+    // Se busca el usuario existente y se modifican solo esos dos campos,
+    // así password, rol, enable y la relación con persona se conservan.
+    @Transactional
+    public Usuario updateUser(Long id, RequestActualizarUsuarioDTO payload){
+        Usuario usuario = findUserOrThrow(id);
+
+        // El username no debe pertenecer a OTRO usuario
+        usuarioRepository.findByUsername(payload.getUsername())
+                .filter(otro -> !otro.getId().equals(id))
+                .ifPresent(otro -> {
+                    throw new BadRequestException("Ese usuario ya existe");
+                });
+
+        usuario.setUsername(payload.getUsername());
+        usuario.setDescripcion(payload.getDescripcion());
+
+        return usuarioRepository.save(usuario);
+    }
+
+    // Validación de existencia reutilizable
+    private Usuario findUserOrThrow(Long id){
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("El usuario no existe"));
     }
 }

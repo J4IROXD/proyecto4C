@@ -5,10 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import mx.edu.utez.proyecto4C.model.cursos.Curso;
 
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table(name = "personas")
